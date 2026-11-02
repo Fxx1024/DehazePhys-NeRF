@@ -1,0 +1,13 @@
+DehazePhys-NeRF inference release
+
+The radiance-field and numerical utilities are derived from NeRF-Factory
+(https://github.com/kakaobrain/nerf-factory) and Mip-NeRF 360 / MultiNeRF
+(https://github.com/google-research/multinerf).
+
+Copyright (c) 2022 POSTECH, KAIST, Kakao Brain Corp. All Rights Reserved.
+Copyright (c) 2022 Google LLC. All Rights Reserved.
+
+Modifications: deterministic scene inference, object radiance rendering,
+standalone camera handling, array-only model loading, and evaluation commands.
+These modifications are distributed under the Apache License, Version 2.0.
+The included LICENSE contains the applicable terms.
