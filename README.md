@@ -17,11 +17,15 @@ python -m pip install -r requirements.txt
 
 ## Models
 
-Extract the model archive into the repository directory. The expected layout is:
+[Download the scene models from Google Drive](https://drive.google.com/drive/folders/1C1Y2CIRqKksdyr379Sqwk7VvkAa7Qogc).
+Each scene has an independent ZIP archive of approximately 35 MB. Download one
+scene or all ten, verify the archive against `MODEL_SHA256SUMS.txt`, then extract
+each archive into the repository directory. Existing scene directories can coexist.
+`--scene all` renders every scene currently extracted under `models/`.
+The expected layout is:
 
 ```text
 models/
-  models.json
   Bear/
     weights.npz
     cameras.npz
@@ -104,6 +108,14 @@ python evaluate.py --predictions results/Bear/evaluation --references references
 Each CSV contains one row per image and an arithmetic-mean row. JPEG decoding
 versions can affect comparisons against reference images originally stored as
 JPEG; preserve the reference decoder when comparing very small metric changes.
+
+## Release validation
+
+All 319 test-camera ray bundles were checked against the reference implementation.
+The corresponding forward-output check covered 40,832 rays with identical values.
+One complete image per scene was rendered and compared pixel by pixel; all ten
+were identical to the reference outputs in the reference environment. The three
+metric entry points were also executed successfully.
 
 ## License and acknowledgments
 

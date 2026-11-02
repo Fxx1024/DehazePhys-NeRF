@@ -22,6 +22,8 @@ def render_scene(root, scene, output, chunk, device, start=0, count=0):
     settings = json.loads((folder / 'scene.json').read_text(encoding='utf8'))
     if hashlib.sha256((folder / 'weights.npz').read_bytes()).hexdigest() != settings['weights_sha256']:
         raise ValueError('Model checksum mismatch: ' + scene)
+    if hashlib.sha256((folder / 'cameras.npz').read_bytes()).hexdigest() != settings['cameras_sha256']:
+        raise ValueError('Camera checksum mismatch: ' + scene)
     model = load_model(folder / 'weights.npz', device)
     with np.load(str(folder / 'cameras.npz'), allow_pickle=False) as archive:
         cameras = {name: archive[name].copy() for name in archive.files}
@@ -79,7 +81,10 @@ def main():
         parser.error('--chunk must be positive')
     torch.set_num_threads(4)
     torch.backends.cuda.matmul.allow_tf32 = False
-    names = json.loads((args.models / 'models.json').read_text(encoding='utf8'))['scenes']
+    names = sorted(path.name for path in args.models.glob('*')
+                   if path.is_dir() and (path / 'scene.json').is_file() and (path / 'weights.npz').is_file())
+    if not names:
+        parser.error('No scene models found; extract at least one scene archive into --models')
     scenes = names if args.scene == 'all' else [args.scene]
     if any(name not in names for name in scenes):
         parser.error('Unknown scene; available scenes: ' + ', '.join(names))
